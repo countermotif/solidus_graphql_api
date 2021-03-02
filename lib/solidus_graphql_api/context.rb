@@ -5,24 +5,31 @@ module SolidusGraphqlApi
     AUTHORIZATION_HEADER = "Authorization"
     TOKEN_PATTERN = /^Bearer (?<token>.*)/.freeze
 
-    attr_reader :request, :headers
+    attr_reader :request, :headers, :warden, :cookies, :devise_user
 
-    def initialize(request:)
+    def initialize(request:, warden:, cookies:, devise_user:)
       @request = request
       @headers = request.headers
+      @warden = warden
+      @cookies = cookies
+      @devise_user = devise_user
     end
 
     def to_h
-      { current_user: current_user,
+      { 
+        current_user: current_user,
         current_ability: current_ability,
         current_store: current_store,
         current_order: current_order,
         current_pricing_options: current_pricing_options,
-        order_token: order_token }
+        order_token: order_token,
+        warden: warden,
+        request: request
+      }
     end
 
     def current_user
-      @current_user ||= Spree.user_class.find_by(spree_api_key: bearer_token)
+      @current_user ||= Spree.user_class.find_by(spree_api_key: bearer_token) || devise_user
     end
 
     def current_ability

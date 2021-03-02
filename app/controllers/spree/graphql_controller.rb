@@ -8,7 +8,12 @@ module Spree
       render json: SolidusGraphqlApi::Schema.execute(
         params[:query],
         variables: ensure_hash(params[:variables]),
-        context: SolidusGraphqlApi::Context.new(request: request).to_h,
+        context: SolidusGraphqlApi::Context.new(
+          request: request, 
+          warden: warden, 
+          cookies: cookies, 
+          devise_user: current_spree_user
+        ).to_h,
         operation_name: params[:operationName]
       )
     rescue StandardError => e
@@ -18,6 +23,10 @@ module Spree
     end
 
     private
+
+    def warden
+      request.env['warden']
+    end
 
     # Handle form data, JSON body, or a blank value
     def ensure_hash(ambiguous_param)
