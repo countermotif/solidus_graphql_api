@@ -18,9 +18,29 @@ module SolidusGraphqlApi
       field :seo_title, String, null: true
       field :updated_at, GraphQL::Types::ISO8601DateTime, null: true
       field :url, String, null: false
+      field :products, Product.connection_type, null: false
+      field :featured_products, Product.connection_type, null: false
+      field :best_selling_products, Product.connection_type, null: true
+      field :newest_products, Product.connection_type, null: false
 
       def currencies
         Spree::Config.available_currencies
+      end
+
+      def products
+        Queries::AllProductsQuery.new.call
+      end
+
+      def featured_products
+        Queries::FeaturedProductsQuery.new.call
+      end
+
+      def best_selling_products
+        Queries::BestSellingProductsQuery.new.call
+      end
+
+      def newest_products
+        Queries::NewestProductsQuery.new.call
       end
     end
   end

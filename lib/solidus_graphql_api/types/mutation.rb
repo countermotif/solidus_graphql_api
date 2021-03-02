@@ -5,6 +5,8 @@ module SolidusGraphqlApi
     class Mutation < Base::Object
       field :save_in_address_book, mutation: Mutations::User::SaveInAddressBook
       field :remove_from_address_book, mutation: Mutations::User::RemoveFromAddressBook
+      field :login, mutation: Mutations::User::Login
+      field :create_user, mutation: Mutations::User::CreateUser
       field :mark_default_address, mutation: Mutations::User::MarkDefaultAddress
       field :add_addresses_to_checkout, mutation: Mutations::Checkout::AddAddressesToCheckout
       field :select_shipping_rate, mutation: Mutations::Checkout::SelectShippingRate
